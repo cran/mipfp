@@ -1,0 +1,15 @@
+Package: mipfp
+Type: Package
+Title: Multidimensional Iterative Proportional Fitting
+Version: 1.0
+Date: 2014-11-26
+Authors@R: c(person("Johan", "Barthelemy", role = c("aut", "cre"),email = "johan@uow.edu.au"),person("Thomas", "Suesse", role = "aut"),person("Mohammad", "Namazi-Rad", role = "ctb"))
+Author: Johan Barthelemy [aut, cre], Thomas Suesse [aut], Mohammad Namazi-Rad [ctb]
+Maintainer: Johan Barthelemy <johan@uow.edu.au>
+Description: An implementation of the iterative proportional fitting procedure for updating a N-dimensional array with respect to given target marginal distributions (which, in turn can be multi-dimensional)
+License: GPL-2
+URL: www.r-project.org
+Packaged: 2014-12-01 00:10:22 UTC; johan
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2014-12-01 09:10:27
