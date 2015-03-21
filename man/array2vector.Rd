@@ -1,5 +1,5 @@
-\name{array2vector}
-\alias{array2vector}
+\name{Array2Vector}
+\alias{Array2Vector}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transforming an array to a vector
@@ -12,7 +12,7 @@ assuming that the last index of the array moves fastest. For instance, an array
 v = ( a[1,1,1], a[1,1,2], a[1,1,3], a[1,2,1], a[1,2,2],\ldots,a[3,3,3] )}.
 }
 \usage{
-array2vector(arr)
+Array2Vector(arr)
 }
 
 \arguments{
@@ -30,16 +30,17 @@ Thomas Suesse.
 Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
 }
 \seealso{
-The opposite transformation is performed with the function 
-\code{\link[mipfp:vector2array]{vector2array}}
+The inverse transformation is performed with the function 
+\code{\link[mipfp:Vector2Array]{Vector2Array}}
 }
 \examples{
 # generating an array of dimension (3,3,3)
 a <- array(seq(1:27),dim=c(3,3,3))
 # transforming it into a vector
-v <- array2vector(a)
+v <- Array2Vector(a)
 }
 
 \keyword{vector}
 \keyword{array}
 \keyword{manip}
+\keyword{utilities}

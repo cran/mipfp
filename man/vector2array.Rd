@@ -1,6 +1,5 @@
-\name{vector2array}
-\alias{vector2array}
-%- Also NEED an '\alias' for EACH other topic documented here.
+\name{Vector2Array}
+\alias{Vector2Array}
 \title{
 Transforming a vector to an array
 }
@@ -13,7 +12,7 @@ relation between a vector \eqn{v} of lenght 8 and an array \eqn{a} of dimensions
 \ldots,a[3,3,3] )}.
 }
 \usage{
-vector2array(vect, dim.out)
+Vector2Array(vect, dim.out)
 }
 \arguments{
   \item{vect}{
@@ -33,12 +32,17 @@ Thomas Suesse.
 
 Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
 }
+\seealso{
+The inverse transformation is performed with the function 
+\code{\link[mipfp:Array2Vector]{Array2Vector}}
+}
 \examples{
 # generate a vector [1,2,...,27]
 v <- seq(1:27)
 # transform it into an array of dimension (3,3,3)
-a <- vector2array(v,c(3,3,3))
+a <- Vector2Array(v,c(3,3,3))
 }
 \keyword{vector}
 \keyword{array}
 \keyword{manip}
+\keyword{utilities}

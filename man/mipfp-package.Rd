@@ -3,43 +3,62 @@
 \alias{mipfp}
 \docType{package}
 \title{
-Multidimensional Iterative Proportional Fitting
+Multidimensional Iterative Proportional Fitting and Alternative Models
 }
 \description{
-An implementation of the iterative proportional
-fitting (IPFP) procedure for updating an initial N-dimensional array (called a 
-seed) with respect to given target marginal distributions. Those targets can 
-also be multi-dimensional. This procedure is also able to estimate a 
-(multi-dimensional) contingency table (encoded as an array) matching a given 
-set of (multi-dimensional) margins. In that case, each cell of the seed must 
-simply be set to 1.
+An implementation of several methods for updating an initial \eqn{N}-dimensional
+array (called a seed) with respect to given target marginal distributions. 
+Those targets can also be multi-dimensional. The procedures are also able to 
+estimate a (multi-dimensional) contingency table (encoded as an array) 
+matching a given set of (multi-dimensional) margins. In that case, each cell 
+of the seed must simply be set to 1.
 
-The IPFP is also known as the RAS algorithm in economics and matrix raking or 
-matrix scaling in computer science.
+The package provides the iterative proportional fitting procedure (IPFP), also 
+known as the RAS algorithm in economics and matrix raking or matrix scaling in 
+computer science. Additionnaly several alternative estimating methods to 
+the IPFP are also included, namely the Maximum likelihood (ML), minimum 
+chi-squared (CHI2) and weighted least squares (LSQ) model-based approaches.
+
+The package also includes an application of the IPFP to simulate and estimate 
+the parameters of multivariate Bernoulli distributions.
 }
 \details{
 \tabular{ll}{
 Package: \tab mipfp\cr
 Type: \tab Package\cr
-Version: \tab 1.5\cr
-Date: \tab 2015-01-21\cr
-Depends: \tab cmm\cr
+Version: \tab 2.0\cr
+Date: \tab 2015-03-21\cr
+Depends: \tab cmm, numDeriv, Rsolnp\cr
 License: \tab GPL-2\cr
 }
-This package provides an implementation of the well-known iterative proportional
-fitting procedure for updating a N-dimensional array with respect to given
-target marginal distributions. Those targets can also multi-dimensional.
-This is the purpose of function \code{Ipfp} documented in \link[mipfp]{Ipfp}.
+This package provides an implementation of several fitting procedures for 
+updating a \eqn{N}-dimensional array with respect to given target marginal 
+distributions. Those targets can also multi-dimensional. The available methods
+are listed herehunder.
 
-The variance-covariance matrix of the updated cells probabilities defined
-by Little and Wu (1991) can also be obtained using the function 
-\code{IpfpCovar} detailed in \link[mipfp]{IpfpCovar}.
+\itemize{
+  \item The function \link[mipfp]{Ipfp} provides the Iterative Proportionnal 
+    Fitting Procedure. The variance-covariance matrix of the updated cells 
+    probabilities determined by Delta method (Little and Wu, 1991) can also 
+    be obtained using the function \link[mipfp]{IpfpCov}.
+  \item Maximum likelihood, minimum Chi-square and weighted least squares
+    approaches are availables in the function
+    \link[mipfp]{ObtainModelEstimates}. Note that the function provides the 
+    updated table as well as the variance-covariance matrix of the estimated 
+    cells probabilities using either the Lang's (2004) or the Delta method 
+    (Little and Wu, 1991).
+}
 
-Also included, \code{array2vector} and \code{vector2array} are two auxillary 
-functions aiming at transforming an array to a vector and vice-versa. Their 
-respective documentation are provided respectively in \link[mipfp]{array2vector}
-and \link[mipfp]{vector2array}.
+The package also includes an application of the IPFP to simulate and estimate 
+the parameters of multivariate Bernoulli distributions, respectively in the
+functions \link[mipfp]{RMultBinary} and \link[mipfp]{ObtainMultBinaryDist}.
+In addition the functions \link[mipfp]{Corr2Odds}, \link[mipfp]{Odds2Corr}, 
+\link[mipfp]{Corr2PairProbs}, \link[mipfp]{Odds2PairProbs} are in turn 
+responsible for converting correlation to odds ratio, odds ratio to correlation, 
+correlation to pairwise probability and odds ratio to pairwise probability.
 
+Finally, \link[mipfp]{Array2Vector} and \link[mipfp]{Vector2Array} are two 
+auxillary functions aiming at transforming an array to a vector and vice-versa. 
 }
 \author{
 Johan Barthelemy and Thomas Suesse with contributions from Mohammad Namazi-Rad.
@@ -47,7 +66,7 @@ Johan Barthelemy and Thomas Suesse with contributions from Mohammad Namazi-Rad.
 Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
 }
 \references{
- Bacharach, M. (1965)
+ Bacharach, M. (1965).
  Estimating Nonnegative Matrices from Marginal Data.
  \emph{International Economic Review} (Blackwell Publishing) 6 (3): 294-310.
  
@@ -63,39 +82,60 @@ Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
  Fienberg, S. E. (1970).
  An Iterative Procedure for Estimation in Contingency Tables.
  \emph{Annals of Mathematical Statistics} 41 (3): 907-917.
+
+ Lang, J.B. (2004) 
+ Multinomial-Poisson homogeneous models for contingency tables. 
+ \emph{Annals of Statistics} 32(1): 340-383.
+
+ Lee, A.J. (1993).
+ Generating Random Binary Deviates Having Fixed Marginal Distributions and 
+ Specified Degrees of Association
+ \emph{The American Statistician}  47 (3): 209-215.
  
  Little, R. J., Wu, M. M. (1991)
  Models for contingency tables with known margins when target and sampled 
  populations differ.
  \emph{Journal of the American Statistical Association} 86 (413): 87-95.
  
+ Qaqish, B. F., Zink, R. C., and Preisser, J. S. (2012). 
+ Orthogonalized residuals for estimation of marginally specified association
+ parameters in multivariate binary data.
+ \emph{Scandinavian Journal of Statistics} 39, 515-527.
+ 
  Stephan, F. F. (1942).
  Iterative method of adjusting frequency tables when expected margins are known.
  \emph{Annals of Mathematical Statistics} 13 (2): 166-178.
 }
-\concept{iterative proportional fitting procedure}
-\concept{ipfp}
-\concept{multiway contingency table update}
-\concept{RAS algorithm}
-\concept{matrix raking}
-\concept{matrix scaling}
-\keyword{models}
-\keyword{multivariate}
-\keyword{array}
 \seealso{
  \code{ipfp} for a package implementing the ipfp to solve problems of the form
- Ax=b.
+ \eqn{Ax = b}{Ax = b}.
 }
 \examples{
-# generation of an intial 2-way table to be updated
-seed <- array(1,dim=c(2,2))
+# generation of an intial 2-ways table to be updated
+seed <- array(1, dim=c(2, 2))
 # desired targets (margins)
-target.row <- c(87,13)
-target.col <- c(52,48)
+target.row <- c(87, 13)
+target.col <- c(52, 48)
 # storing the margins in a list
 target.data <- list(target.col, target.row)
 # list of dimensions of each marginal constrain
-target.list <- list(1,2)
-# calling the Ipfp function
-res <- Ipfp(seed, target.list, target.data)
+target.list <- list(1, 2)
+# calling the fitting methods
+r.ipfp <- Ipfp(seed, target.list, target.data)
+r.ml <- ObtainModelEstimates(seed, target.list, target.data, method = "ml")
+r.chi2 <- ObtainModelEstimates(seed, target.list, target.data, method = "chi2")
+r.lsq <- ObtainModelEstimates(seed, target.list, target.data, method = "lsq")
 }
+\concept{iterative proportional fitting procedure}
+\concept{ipfp}
+\concept{multiway contingency table update}
+\concept{multivariate contingency table update}
+\concept{RAS algorithm}
+\concept{matrix raking}
+\concept{matrix scaling}
+\concept{Bernoulli}
+\keyword{models}
+\keyword{multivariate}
+\keyword{array}
+\keyword{distribution}
+\keyword{package}

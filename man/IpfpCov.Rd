@@ -1,5 +1,5 @@
-\name{IpfpCovar}
-\alias{IpfpCovar}
+\name{IpfpCov}
+\alias{IpfpCov}
 \title{
 Covariance matrix of the estimators produced by Ipfp
 }
@@ -9,7 +9,7 @@ iterative proportional fitting procedure using the formula designed by Little
 and Wu (1991).
 }
 \usage{
-IpfpCovar(estimate, seed, target.list, replace.zeros = 1e-10)
+IpfpCov(estimate, seed, target.list, replace.zeros = 1e-10)
 }
 \arguments{
   \item{estimate}{
@@ -27,7 +27,7 @@ IpfpCovar(estimate, seed, target.list, replace.zeros = 1e-10)
 }
   \item{replace.zeros}{
     If a cell of the \code{estimate} or the \code{seed} has a value equals to 
-    0, then it is replaced with this value.
+    0, then it is replaced with this value. Default is 1e-10.
 }
 }
 \details{
@@ -49,12 +49,10 @@ IpfpCovar(estimate, seed, target.list, replace.zeros = 1e-10)
   of the asymptotic variance of the estimates produced by \code{Ipfp}.
 }
 \references{
-
  Little, R. J., Wu, M. M. (1991)
  Models for contingency tables with known margins when target and seed 
  populations differ.
  \emph{Journal of the American Statistical Association} 86 (413): 87-95.
- 
 }
 \author{
 Johan Barthelemy.
@@ -67,22 +65,32 @@ Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
 array with respect to given constraints.
 }
 \examples{
-# generation of an intial 2-way table to be updated
-seed <- array(1,dim=c(2,2))
+# true contingency (2-way) table
+true.table <- array(c(43, 44, 9, 4), dim = c(2, 2))
+# generation of sample, i.e. the seed to be updated
+seed <- ceiling(true.table / 10)
 # desired targets (margins)
-target.row <- c(87,13)
-target.col <- c(52,48)
+target.row <- apply(true.table, 2, sum)
+target.col <- apply(true.table, 1, sum)
 # storing the margins in a list
 target.data <- list(target.col, target.row)
 # list of dimensions of each marginal constrain
-target.list <- list(1,2)
+target.list <- list(1, 2)
 # calling the Ipfp function
 res <- Ipfp(seed, target.list, target.data)
 
 # computation of the covariance matrix of the produced estimates
-res.cov <- IpfpCovar(res$xi.hat, seed, target.list)
-}
+res.cov <- IpfpCov(res$x.hat, seed, target.list)
 
+# 0.95 level confidence interval of the estimates
+n <- sum(res$x.hat)
+# ... lower bound
+ci.lb <- Array2Vector(res$x.hat) - 1.96 * n * sqrt(diag(res.cov))
+# ... upperbound
+ci.ub <- Array2Vector(res$x.hat) + 1.96 * n * sqrt(diag(res.cov))
+}
+\concept{multiway contingency table estimation}
+\concept{multivariate contingency table estimation}
 \keyword{models}
 \keyword{multivariate}
 \keyword{array}

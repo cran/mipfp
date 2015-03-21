@@ -17,7 +17,7 @@ matrix scaling in computer science.
 }
 \usage{
 Ipfp(seed, target.list, target.data, print = FALSE, iter = 1000, tol = 1e-10,
-     na.target = FALSE)
+     na.target = FALSE, compute.cov = FALSE, ...)
 }
 \arguments{
   \item{seed}{
@@ -46,19 +46,33 @@ Ipfp(seed, target.list, target.data, print = FALSE, iter = 1000, tol = 1e-10,
   \item{tol}{
     Stopping criterion. If the maximum absolute difference between two iteration
     is lower than the value specified by \code{tol}, then ipfp has reached 
-    convergence; must be greater than 0. Default is 1e-10.
+    convergence; must be greater than 0. Default is \eqn{1e^{-10}}{1e-10}.
 }
   \item{na.target}{
     If set to TRUE, allows the targets to have NA cells. Note that in that 
     particular case the margins consistency is not checked.
 }
+  \item{compute.cov}{
+    If set to TRUE, then the function also return the covariance matrices of 
+    the updated cells and cells proportion as well as the associated standard
+    errors. Default = FALSE.
+}
+  \item{...}{
+    Additional arguments that can be passed to the IpfpCov function if
+    compute.cov = TRUE. See \link[mipfp:IpfpCov]{IpfpCov} documentation for more
+    details.
+}
 }
 \value{
 A list containing the final updated array as well as other convergence
 informations.
-  \item{xi.hat}{
+  \item{x.hat}{
     An array of the same dimension of \code{seed} whose margins match the ones
     specified in \code{target.list}.
+}
+  \item{p.hat}{
+    An array of the same dimension of \code{x.hat} containing the updated
+    cell probabilities, i.e. \code{x.hat / sum(x.hat)}.
 }
   \item{stp.crt}{
     The final value of the stopping criterion.
@@ -73,15 +87,9 @@ informations.
     A list returning, for each margin, the absolute maximum deviation between 
     the desired and generated margin.
 }
-
-
-
-
-
-
 }
 \references{
- Bacharach, M. (1965)
+ Bacharach, M. (1965).
  Estimating Nonnegative Matrices from Marginal Data.
  \emph{International Economic Review} (Blackwell Publishing) 6 (3): 294-310.
 
@@ -121,7 +129,10 @@ is then normalised by considering probabilities instead of frequencies:
 
 \seealso{
  \code{ipfp} for a package implementing the ipfp to solve problem of the form 
- Ax=b.
+ Ax=b. 
+ 
+ The documentation of \link[mipfp:IpfpCov]{IpfpCov} provide details on the
+ the covariance matrices determination.
 }
 
 \examples{
@@ -135,8 +146,8 @@ target.col <- c(30,70)
 tgt.data.2d <- list(target.col, target.row)
 # list of dimensions of each marginal constrain
 tgt.list.2d <- list(1,2)
-# calling the Ipfp function
-res.2d <- Ipfp(seed.2d, tgt.list.2d, tgt.data.2d)
+# calling the Ipfp function, requesting the covariance matrices
+res.2d <- Ipfp(seed.2d, tgt.list.2d, tgt.data.2d, compute.cov = TRUE)
 
 # Example 2: 3-way table (V1,V2,V3) of dim=(2,4,2)
 # seed
@@ -164,7 +175,7 @@ seed.2d.na <- array(1,dim=c(2,3))
 target.row.na <- c(40,60)
 target.col.na <- c(NA,10,NA)
 # storing the margins in a list
-tgt.data.2d.na <- list(target.row, target.col)
+tgt.data.2d.na <- list(target.row.na, target.col.na)
 # storing the description of target data in a list
 tgt.list.2d.na <- list(1,2)
 # calling the Ipfp function
@@ -173,6 +184,7 @@ res.2d.na <- Ipfp(seed.2d.na, tgt.list.2d.na, tgt.data.2d.na, na.target=TRUE)
 \concept{iterative proportional fitting procedure}
 \concept{ipfp}
 \concept{multiway contingency table update}
+\concept{multivariate contingency table estimation}
 \concept{RAS algorithm}
 \concept{matrix raking}
 \concept{matrix scaling}
