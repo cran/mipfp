@@ -10,7 +10,7 @@ measure of association \eqn{C_{ij}}{C_ij} between every pair
 \eqn{P(X_i = 1, X_j = 1)}{P(X_i = 1, X_j = 1)}, where \eqn{C_{ij}}{C_ij} is
 defined as
 \deqn{
-C_ij = \frac{cov(X_i, X_j)}{\sqrt(var(X_i) * var(X_j))}.
+C_{ij} = \frac{cov(X_i, X_j)}{\sqrt(var(X_i) * var(X_j))}.
 }{
 C_ij = cov(X_i, X_j) / sqrt(var(X_i) * var(X_j)).}
 }

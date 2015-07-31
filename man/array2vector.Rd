@@ -1,6 +1,5 @@
 \name{Array2Vector}
 \alias{Array2Vector}
-%- Also NEED an '\alias' for EACH other topic documented here.
 \title{
 Transforming an array to a vector
 }

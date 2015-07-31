@@ -3,20 +3,18 @@
 \title{Estimating a contingency table using model-based approaches
 }
 \description{This function provides several alternative estimating methods to 
-the IPFP when estimating multiway table subject to known constrains/totals: 
+the IPFP when estimating a multiway table subject to known constrains/totals: 
 maximum likelihood method (ML), minimum chi-squared (CHI2) and weighted least 
-squares (LSQ). Note that the resulting estimators are probabilities.
+squares (WLSQ). Note that the resulting estimators are probabilities.
    
-The covariance matrix of the estimated proportions (as defined in the paper 
-"Models for contingency tables with known margins when target and sampled 
-populations differ" by Little and Wu (1991) are also provided. Also in the case 
-of the ML method, the covariance matrix defined by Lang in "Multinomial-Poisson 
-homogeneous models for contingency tables" (2004) is also returned.
+The covariance matrix of the estimated proportions (as defined by Little and Wu, 
+1991) are also provided. Also in the case of the ML method, the covariance 
+matrix defined by Lang (2004) is also returned.
 
 }
 \usage{
 ObtainModelEstimates(seed, target.list, target.data, method="ml", 
-                     replace.zeros = 1e-10, ...)
+                     replace.zeros = 1e-10, compute.cov = FALSE, ...)
 }
 \arguments{
  \item{seed}{
@@ -44,6 +42,11 @@ ObtainModelEstimates(seed, target.list, target.data, method="ml",
     as procedures require strictly positive cells. Default value is 
     \eqn{1e^{-10}}{1e-10}.
 }
+  \item{compute.cov}{
+    If set to TRUE, then the function also return the (asymptotic) covariance 
+    matrices of the updated cells and cells proportion as well as the 
+    associated standard errors. Default = FALSE.
+}
   \item{...}{Additional parameters that can be passed to control the 
     optimisation process (see \link[Rsolnp:solnp]{solnp} from the package 
     \link[Rsolnp]{Rsolnp}).
@@ -52,17 +55,27 @@ ObtainModelEstimates(seed, target.list, target.data, method="ml",
 \value{
 A list containing the final estimated table as well as the covariance matrix of
 the estimated proportion and other convergence informations.
-  \item{p.hat}{
-    Array of the estimated table probabilities.
-}
   \item{x.hat}{
     Array of the estimated table frequencies.
 }
+  \item{p.hat}{
+    Array of the estimated table probabilities.
+}
+  \item{x.hat.cov}{
+    Asymptotic covariance matrix for \code{x.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{x.hat.se}{
+    Vector of standard errors for \code{x.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
+}
   \item{p.hat.cov}{
-    Asymptotic covariance matrix for \code{pi.hat} using the Delta method.
+    Asymptotic covariance matrix for \code{p.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
 }
   \item{p.hat.se}{
-    Vector of standard errors for \code{pi.hat} using the Delta method.
+    Vector of standard errors for \code{p.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
 }
   \item{check.margins}{
     For each list element of \code{target.data}, \code{check.margins} shows the 
@@ -78,25 +91,35 @@ the estimated proportion and other convergence informations.
 
 Additionnaly, it the estimation method is \code{ml}, then the function also 
 returns the following elements.
-  \item{lang$p.hat.cov}{
-    Asymptotic covariance matrix for \code{pi.hat} using Lang's method
-}
-  \item{lang$p.hat.se}{
-    Vector of standard errors for \code{pi.hat} using Lang's method.
-}
-  \item{lang$G2}{
+  \item{G2}{
     Log-likelihood statistic for testing that the target constraints are met.
 }
-  \item{lang$W2}{
+  \item{W2}{
     Wald statistic for testing that the target constraints are met.
 }
-  \item{lang$X2}{
-    Person chi-squared statistic for testing that the target constraints are 
+  \item{X2}{
+    Pearson chi-squared statistic for testing that the target constraints are 
     met.
 }
-  \item{lang$df}{
+  \item{df}{
     Degrees of freedom relevant for the \code{G2}, \code{W2} and \code{X2} 
     statistics.
+}
+  \item{lang$x.hat.cov}{
+    Asymptotic covariance matrix for \code{x.hat} using Lang's method (if
+    \code{compute.cov = TRUE}).
+}
+  \item{lang$x.hat.se}{
+    Vector of standard errors for \code{x.hat} using Lang's method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{lang$p.hat.cov}{
+    Asymptotic covariance matrix for \code{p.hat} using Lang's method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{lang$p.hat.se}{
+    Vector of standard errors for \code{p.hat} using Lang's method (if 
+    \code{compute.cov = TRUE}).
 }
 }
 \references{
@@ -132,17 +155,18 @@ target.list <- list(c(1, 2), 3)
 target.data <- list(margins12.array, margins3.array)
 
 # estimating the new contingency table using the ml method
-results.ml <- ObtainModelEstimates(seed, target.list, target.data)
+results.ml <- ObtainModelEstimates(seed, target.list, target.data, 
+                                   compute.cov = TRUE)
 print(results.ml)
 
 # estimating the new contingency table using the chi2 method
 results.chi2 <- ObtainModelEstimates(seed, target.list, target.data, 
-                                     method = "chi2")
+                                     method = "chi2", compute.cov = TRUE)
 print(results.chi2)
 
 # estimating the new contingency table using the lsq method
 results.lsq <- ObtainModelEstimates(seed, target.list, target.data,
-                                    method = "lsq")
+                                    method = "lsq", compute.cov = TRUE)
 print(results.lsq)
 }
 \concept{multiway contingency table estimation}

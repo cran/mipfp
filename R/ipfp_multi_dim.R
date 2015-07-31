@@ -195,24 +195,25 @@ Ipfp <- function(seed, target.list, target.data, print = FALSE, iter = 1000,
   # storing the evolution of the stopping criterion
   evol.stp.crit <- tmp.evol.stp.crit[1:i]
   
+  # computing the proportions
   result.prop <- result / sum(result)
   
   # gathering the results in a list
-  result.list <- list("x.hat" = result, "p.hat" = result.prop, 
+  results.list <- list("x.hat" = result, "p.hat" = result.prop, 
                       "stp.crit" = stp.crit, "conv" = converged, 
                       "check.margins" = diff.margins, 
                       "evol.stp.crit" = evol.stp.crit);
   
   # adding covariance if requested
   if (compute.cov == TRUE) {
-    result.list$p.hat.cov <- IpfpCov(result, seed, target.list, ...)
-    result.list$x.hat.cov <- result.list$p.hat.cov * sum(result)^2
-    result.list$p.hat.se <- sqrt(diag(result.list$p.hat.cov))
-    result.list$x.hat.se <- sqrt(diag(result.list$x.hat.cov))
+    results.list$p.hat.cov <- IpfpCov(result, seed, target.list, ...)
+    results.list$x.hat.cov <- results.list$p.hat.cov * sum(result)^2
+    results.list$p.hat.se <- sqrt(diag(results.list$p.hat.cov))
+    results.list$x.hat.se <- sqrt(diag(results.list$x.hat.cov))
   }
   
   # returning the result
-  return(result.list)
+  return(results.list)
   
 }
 
@@ -252,7 +253,7 @@ IpfpCov <- function(estimate, seed, target.list, replace.zeros = 1e-10) {
   D.seed <- diag(1 / seed.prob)
   D.estimate <- diag(1 / estimate.prob)
   
-  # computation of A such that A * vector(estimate) = vector(target.data)
+  # computation of A such that A' * vector(estimate) = vector(target.data)
   # ... one line filled with ones
   A.transp <- matrix(1, nrow = 1, ncol = length(estimate.prob))  
   # ... constrainst (removing the first one since it is redundant information)
@@ -264,14 +265,17 @@ IpfpCov <- function(estimate, seed, target.list, replace.zeros = 1e-10) {
   }  
   A <- t(A.transp)
   
+  # removing the linearly dependant columns from A (redundant constrainst)
+  A <- GetLinInd(A)$mat.li
+    
   # computation of the orthogonal complement of A (using QR decomposition)
   K <- qr.Q(qr(A), complete = TRUE)[, (dim(A)[2] + 1):dim(A)[1]]
-  
+
   # computation of the variance  
   estimate.var <- (1 / n) * K %*% solve((t(K) %*% D.estimate %*% K)) %*%
                   t(K) %*% D.seed %*% K %*%
-                  solve(t(K) %*% D.estimate %*% K) %*% t(K)
-  
+                  solve(t(K) %*% D.estimate %*% K) %*% t(K)   
+
   # returning the result
   return(estimate.var)
   

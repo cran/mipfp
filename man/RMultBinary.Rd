@@ -11,29 +11,38 @@ dependent binary (Bernoulli) variables
 (of 2^K cells) detailing the joint-probabilities.
 }
 \usage{
-RMultBinary(n = 1, array.prob, target.values = NULL)
+RMultBinary(n = 1, mult.bin.dist, target.values = NULL)
 }
 \arguments{
-  \item{n}{Desired sample size. Default = 1.
+  \item{n}{
+    Desired sample size. Default = 1.
 }
-  \item{array.prob}{An array detailing the joint-probabilities of the \eqn{K} 
+  \item{mult.bin.dist}{
+    A list describing the multivariate binary distribution. It can be generated
+    by the \code{\link[mipfp]{ObtainMultBinaryDist}} function.
+    The list contains at least the element \code{joint.proba}, an array 
+    detailing the joint-probabilities of the \eqn{K} 
     binary variables. The array has \eqn{K} dimensions of size 2, referring to 
-    the 2 possible outcomes of the considered variable). Hence, the total number 
-    of elements is \eqn{2^K}{2^K}. This array can be obtained via the 
-    \code{\link[mipfp]{ObtainMultBinaryDist}} function.
+    the 2 possible outcomes of the considered variable. Hence, the total number 
+    of elements is \eqn{2^K}{2^K}.
+    Additionnaly the list can also provides the element \code{var.label}, a list
+    containing the names of the \eqn{K} variables.    
 }
-  \item{target.values}{A list describing the possibles outcomes of each binary
-    variable, for instance \{1, 2\}. Default = \{0, 1\}.
+  \item{target.values}{
+    A list describing the possibles outcomes of each binary variable, for 
+    instance \{1, 2\}. Default = \{0, 1\}.
 }
 }
 \value{
 A list whose elements are detailed herehunder.
-  \item{binary.sequences}{The generated \eqn{K \times n}{K x n} random sequence.
+  \item{binary.sequences}{
+  The generated \eqn{K \times n}{K x n} random sequence.
 }
-  \item{possible.binary.sequences}{The possible binary sequences, i.e. the 
-    domain.
+  \item{possible.binary.sequences}{
+    The possible binary sequences, i.e. the domain.
 }
-  \item{chosen.random.index}{The index of the random draws in the domain.
+  \item{chosen.random.index}{
+    The index of the random draws in the domain.
 }
 }
 \references{
@@ -71,8 +80,7 @@ p <- c(0.2, 0.4, 0.6, 0.8)
 p.joint <- ObtainMultBinaryDist(odds = or, marg.probs = p)
 
 # simulating 100,000 draws from the obtained joint-distribution
-y.sim <- RMultBinary(n = 1e5, array.prob = p.joint$x.hat)$binary.sequences
-colnames(y.sim) <- c("Parent1", "Parent2", "Sibling1", "Sibling2")
+y.sim <- RMultBinary(n = 1e5, mult.bin.dist = p.joint)$binary.sequences
 
 # checking results
 cat('dim y.sim =', dim(y.sim)[1], 'x', dim(y.sim)[2], '\n')
@@ -86,7 +94,7 @@ cat('True correlation\n')
 Odds2Corr(or,p)$corr
 
 # generating binary outcomes with outcome different than 0, 1
-RMultBinary(n = 10, array.prob = p.joint$x.hat, 
+RMultBinary(n = 10, mult.bin.dist = p.joint, 
             target.values = list(c("A", "B"), c(0, 1), c(1, 2), c(100, 101)))
 }
 \concept{Bernoulli}

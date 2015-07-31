@@ -24,7 +24,8 @@ library(cmm)
 library(numDeriv)
 
 ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml", 
-                                 replace.zeros = 1e-10, ...) {
+                                 replace.zeros = 1e-10, compute.cov = FALSE,
+                                 ...) {
   # Estimates N-way tables using max likelihood, min chi2 or least squares.
   # 
   # This function provides several alternative estimating methods to the IPFP 
@@ -108,16 +109,27 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
     stop('Error: replace.zeros must be strictly positive!')
   }
   
-  # checking the margins consistency if no missing values in the targets    
+  # checking the margins consistency if no missing values in the targets
+  check.margins <- TRUE
   if (length(target.data) > 1) {
     for (m in 2:length(target.data)) {      
-      if (abs(sum(target.data[[m-1]]) - sum(target.data[[m]])) > 1e-10) {        
-        stop('Target not consistents - shifting to probabilities!
-              Check input data!\n')        
+      if (abs(sum(target.data[[m-1]]) - sum(target.data[[m]])) > 1e-10) {   
+        check.margins <- FALSE
+        warning('Target not consistents - shifting to probabilities!
+                  Check input data!\n')
+        break  
       }      
     }
   }
 
+  # if margins are not consistent, shifting from frequencies to probabilities
+  if (check.margins == FALSE) {
+    seed <- seed / sum(seed)
+    for (m in 1:length(target.data)) {
+      target.data[[m]] <- target.data[[m]] / sum(target.data[[m]])
+    }
+  }  
+  
   # create vector version the seed compatible with the function 'MarginalMatrix' 
   # from cmm that requires that the last index moves fatest
   seed.vector <- Array2Vector(seed)
@@ -131,8 +143,8 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
   target.n = sum(target.data[[1]])
   
   # scaling input to probabilities and removing 0 cells
-  seed.prop.vector <- seed.vector / n
-  seed.prop.vector[seed.prop.vector == 0] <- replace.zeros  
+  seed.vector[seed.vector == 0] <- replace.zeros * n
+  seed.prop.vector <- seed.vector / n  
         
   # generation of the constraints matrix A such that A * pi.hat' = target.data',
   # where pi.hat' and target.data' are obtained by removing the first element of
@@ -160,11 +172,18 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
     length.margins[k] <- length(temp.margins)
     
   }
+  
+  # removing the linearly dependant rows
+  temp <- GetLinInd(t(A))
+  A <- t(temp$mat.li)    
   dim.A <- dim(A)      
   
-  # adding a final row of 1 to A to generate A.new
-  A.new <- rbind(A, 1)    
+  # and updating the vector of target margins accordingly
+  margins.vector <- margins.vector[temp$idx]  
   
+  # adding a final row of 1 to A to generate A.new
+  A.new <- rbind(A, 1) 
+    
   # defining some functions used by the optimisation
   # ... log-likelihood function
   fun.loglik <- function(p) {
@@ -183,7 +202,7 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
   
   # ... equality constraints
   eqfun1 <- function(p) {
-    return(A.new %*% p - c(margins.vector, 1))
+    return(A.new %*% p - c(margins.vector, 1))    
   }
   
   # switching to the desired user method
@@ -204,19 +223,21 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
   rsolnp <- try(Rsolnp::solnp(pars=seed.prop.vector, fun = fun,
                               LB = rep(0 + replace.zeros^1.5, K.prod), 
                               UB = rep(1 - replace.zeros^1.5, K.prod), 
-                              eqfun = eqfun1, eqB = c(rep(0, dim(A.new)[1])),
+                              eqfun = eqfun1, eqB = c(rep(0, dim(A.new)[1])),                              
                               control = list(trace = 0, ...)))
   
   # assessing solnp's convergence, returning an error if no convergence
   if (inherits(rsolnp, "try-error") | rsolnp$convergence > 0 ){
-    stop("No solutions found by solnp!\n")    
+    warning("No reliable solutions found by solnp!
+            Check the delta and tol parameters.
+            replace.zeros might be too low!\n")   
   }
       
   # saving solution: probabilities and frequencies
   pi.hat <- rsolnp$pars
   pi.hat.array <- Vector2Array(pi.hat, dim.out = K)  
   xi.hat.array <- pi.hat.array * target.n;    
-  
+    
   # computing final max difference between generated and target margins
   check.margins <- vector(mode = "numeric", length = n.sets.margins)  
   for (j in 1:n.sets.margins) {
@@ -224,59 +245,62 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
                           - apply(xi.hat.array, target.list[[j]], sum))) 
   }      
   
-  # compute variance estimators using the Delta method (Little and Wu, 1991)
-  # ... computing D1 and D2 matrices according to the chosen method
-  switch(method.num, { 
-    # ML 
-    D1.inv <- diag( 1 / (pi.hat^2 / seed.prop.vector))
-    D2.inv <- D1.inv
-  }, {
-    # CHI2
-    D1.inv <- diag(1 / (pi.hat^4 / seed.prop.vector^3))
-    D2.inv <- diag(1 / (pi.hat^4 / seed.prop.vector^3))
-  }, {
-    # LSQ
-    D1.inv <- diag(1 / seed.prop.vector)
-    D2.inv <- diag(1 / (seed.prop.vector^3 / pi.hat^2))
-  })  
-  # ... obtain orthogonal complement of A.new using QR decomposition
-  U <- (t(qr.Q(qr(t(A.new)), complete = TRUE))[-(1:dim(A.new)[1]), ])
-  if (is.null(dim(U)) == TRUE) {
-    U <- t(U)
-  } 
-  
-  # ... computing the variance
-  pi.VCov <- (1 / n) * t(U) %*% solve(U %*% D1.inv %*% t(U)) %*% 
-             (U %*% D2.inv %*% t(U)) %*% solve(U %*% D1.inv %*% t(U)) %*% U
-  
-  # estimates' standart error
-  pi.se <- sqrt(diag(pi.VCov)) 
-
   # gathering the results
-  results <- list("p.hat" = pi.hat.array, "x.hat" = xi.hat.array, 
-                  "p.hat.se" = pi.se, "p.hat.cov" = pi.VCov, 
+  results <- list("x.hat" = xi.hat.array, "p.hat" = pi.hat.array,                  
                   "check.margins" = check.margins, "solnp.res" = rsolnp)  
   
-  # calculate Lang's covariance matrix if method = ML, skip otherwise
-  if (method.num == 1) {
+  
+  # compute variance estimators using the Delta method (Little and Wu, 1991)
+  if (compute.cov == TRUE) {
+    # ... computing D1 and D2 matrices according to the chosen method
+    switch(method.num, { 
+      # ML 
+      D1.inv <- diag( 1 / (pi.hat^2 / seed.prop.vector))
+      D2.inv <- D1.inv
+    }, {
+      # CHI2
+      D1.inv <- diag(1 / (pi.hat^4 / seed.prop.vector^3))
+      D2.inv <- diag(1 / (pi.hat^4 / seed.prop.vector^3))
+    }, {
+      # LSQ
+      D1.inv <- diag(1 / seed.prop.vector)
+      D2.inv <- diag(1 / (seed.prop.vector^3 / pi.hat^2))
+    })  
     
-    # constraint function h(x) = A * pi - margins
+    # ... obtain orthogonal complement of A.new using QR decomposition
+    A.new.t <- t(A.new)     
+    U <- qr.Q(qr(A.new.t), 
+              complete = TRUE)[,(dim(A.new.t)[2] + 1):dim(A.new.t)[1]]
+    
+    if (is.null(dim(U)) == TRUE) {
+      U <- t(U)
+    } 
+    
+    # ... computing the variance
+    pi.VCov <- (1 / n) * U %*% solve(t(U) %*% D1.inv %*% U) %*% 
+               t(U) %*% D2.inv %*% U %*% solve(t(U) %*% D1.inv %*% U) %*% t(U)
+    xi.VCov <- pi.VCov * sum(xi.hat.array)^2
+    
+    # estimates' standart error
+    pi.se <- sqrt(diag(pi.VCov)) 
+    xi.se <- sqrt(diag(xi.VCov))
+    
+    # updating the results
+    results$p.hat.cov <- pi.VCov
+    results$x.hat.cov <- xi.VCov
+    results$p.hat.se <- pi.se
+    results$x.hat.se <- xi.se    
+    
+  }
+  
+  # calculate Lang's covariance matrix and various statistic test if method = ML
+  if (method.num == 1) {          
+  
+    # constraint function h(pi) = A * pi - margins
     h.fct <- function(m) {            
       return(A %*% (m / sum(m)) - margins.vector)            
-    }
-    
-    # Jacobian of h.fct
-    H.pi <- t(numDeriv::jacobian(h.fct, pi.hat * n))
-    
-    # Lang's covariance
-    D.pi <- diag(pi.hat)          
-    pi.VCov.Lang <- 1 / n * (D.pi - pi.hat %*% t(pi.hat) - D.pi %*% H.pi %*% 
-                             solve(t(H.pi) %*% D.pi %*% H.pi) %*% t(H.pi)
-                             %*% D.pi)  
+    }       
         
-    # extracting standart errors
-    pi.se.Lang <- sqrt(diag(pi.VCov.Lang))
-           
     # compute statistics for testing if constraints are met
     H.seed <- t(numDeriv::jacobian(h.fct, seed.vector)) 
     h.Y <- h.fct(seed.vector)
@@ -286,14 +310,35 @@ ObtainModelEstimates <- function(seed, target.list, target.data, method = "ml",
     W2 <- t(h.Y) %*% solve(t(H.seed) %*% diag(seed.vector) %*% H.seed) %*% h.Y
     # ... Pearson Chi-square
     X2 <- t(seed.vector - n * pi.hat) %*% diag(1 / (n * pi.hat)) %*% 
-          (seed.vector - n * pi.hat)
+      (seed.vector - n * pi.hat)
     # ... associated degree of freedoms (dim of constraint function h)
     df <- dim.A[1]
     
-    # ... appending the new results to the previous ones
-    results$lang <- list("p.hat.se" = pi.se.Lang, "p.hat.cov" = pi.VCov.Lang, 
-                         "G2" = G2, "W2" = W2, "X2" = X2, "df" = df )
+    # ... appending the statistics to the previous results
+    results$G2 <- G2
+    results$W2 <- W2
+    results$X2 <- X2
+    results$df <- df      
     
+    # Lang's covariance if requested
+    if (compute.cov == TRUE) {      
+      H.pi <- t(numDeriv::jacobian(h.fct, pi.hat))    
+      D.pi <- diag(pi.hat)          
+      pi.VCov.Lang <- 1 / n * (D.pi - pi.hat %*% t(pi.hat) - D.pi %*% H.pi %*% 
+                               solve(t(H.pi) %*% D.pi %*% H.pi) %*% t(H.pi)
+                               %*% D.pi)  
+      xi.VCov.Lang <- pi.VCov.Lang * sum(xi.hat.array)^2    
+      
+      # extracting standart errors
+      pi.se.Lang <- sqrt(diag(pi.VCov.Lang))
+      xi.se.Lang <- sqrt(diag(xi.VCov.Lang))
+      
+      # ... appending the Lang's covariance estimation to the results      
+      results$lang <- list("p.hat.se" = pi.se.Lang, "p.hat.cov" = pi.VCov.Lang,
+                           "x.hat.se" = xi.se.Lang, "x.hat.cov" = xi.VCov.Lang)
+      
+    }    
+               
   }  
 
   # returning results

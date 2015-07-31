@@ -4,9 +4,9 @@
 Covariance matrix of the estimators produced by Ipfp
 }
 \description{
-This function determines the covariance matrix of the estimates produced by the 
-iterative proportional fitting procedure using the formula designed by Little
-and Wu (1991).
+This function determines the (asymptotic) covariance matrix of the estimates 
+produced by the iterative proportional fitting procedure using the formula 
+designed by Little and Wu (1991).
 }
 \usage{
 IpfpCov(estimate, seed, target.list, replace.zeros = 1e-10)
@@ -79,15 +79,15 @@ target.list <- list(1, 2)
 # calling the Ipfp function
 res <- Ipfp(seed, target.list, target.data)
 
-# computation of the covariance matrix of the produced estimates
+# computation of the covariance matrix of the produced estimated probabilities
 res.cov <- IpfpCov(res$x.hat, seed, target.list)
 
 # 0.95 level confidence interval of the estimates
 n <- sum(res$x.hat)
 # ... lower bound
-ci.lb <- Array2Vector(res$x.hat) - 1.96 * n * sqrt(diag(res.cov))
+ci.lb <- Array2Vector(res$x.hat) - 1.96 * sqrt(n * diag(res.cov))
 # ... upperbound
-ci.ub <- Array2Vector(res$x.hat) + 1.96 * n * sqrt(diag(res.cov))
+ci.ub <- Array2Vector(res$x.hat) + 1.96 * sqrt(n * diag(res.cov))
 }
 \concept{multiway contingency table estimation}
 \concept{multivariate contingency table estimation}

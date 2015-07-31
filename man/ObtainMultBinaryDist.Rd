@@ -40,9 +40,9 @@ ObtainMultBinaryDist(odds = NULL, corr = NULL, marg.probs, ...)
 }
 
 \value{
-A list whose elements are determined by the \code{Ipfp} function.
-  \item{p.hat}{
-    The resulting multivariate joint-probabilities.
+A list whose elements are mainly determined by the \code{Ipfp} function.
+  \item{joint.proba}{
+    The resulting multivariate joint-probabilities (from \code{Ipfp}).
 }
   \item{stp.crit}{
     The final value of the \code{Ipfp} stopping criterion.
@@ -54,7 +54,10 @@ A list whose elements are determined by the \code{Ipfp} function.
   \item{check.margins}{
     A list returning, for each margin, the absolute maximum deviation between 
     the desired and generated margin. Ideally the elements should approximate
-    0.
+    0 (from \code{Ipfp}).
+}
+  \item{label}{
+    The names of the variables.
 }
 }
 \references{
@@ -97,14 +100,14 @@ p <- c(0.2, 0.4, 0.6, 0.8)
 
 # estimating the joint-distribution
 p.joint <- ObtainMultBinaryDist(odds = or, corr = NULL, marg.probs = p)
-print(p.joint$p.hat)
+print(p.joint$joint.proba)
 
 # obtain identical solution when providing correlation
 corr <- Odds2Corr(odds = or, marg.probs = p)$corr
 p.joint.alt <- ObtainMultBinaryDist(corr = corr, marg.probs = p)
 
 # checking if the results are truly identicals
-diff <- sum(abs(p.joint.alt$p.hat - p.joint$p.hat))
+diff <- sum(abs(p.joint.alt$joint.proba - p.joint$joint.proba))
 cat('Sum of the absolute deviations: ', diff, '\n')
 }
 \concept{Bernoulli}

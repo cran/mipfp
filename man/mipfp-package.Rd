@@ -16,19 +16,22 @@ of the seed must simply be set to 1.
 The package provides the iterative proportional fitting procedure (IPFP), also 
 known as the RAS algorithm in economics and matrix raking or matrix scaling in 
 computer science. Additionnaly several alternative estimating methods to 
-the IPFP are also included, namely the Maximum likelihood (ML), minimum 
-chi-squared (CHI2) and weighted least squares (LSQ) model-based approaches.
+the IPFP are also included, namely the maximum likelihood (ML), minimum 
+chi-squared (CHI2) and weighted least squares (WLSQ) model-based approaches.
 
 The package also includes an application of the IPFP to simulate and estimate 
 the parameters of multivariate Bernoulli distributions.
+
+Finally a function extracting the linearly independant columns from a matrix,
+hence returning a matrix of full rank is provided.
 }
 \details{
 \tabular{ll}{
 Package: \tab mipfp\cr
 Type: \tab Package\cr
-Version: \tab 2.0\cr
-Date: \tab 2015-03-21\cr
-Depends: \tab cmm, numDeriv, Rsolnp\cr
+Version: \tab 2.2\cr
+Date: \tab 2015-07-31\cr
+Depends: \tab cmm, numDeriv, Rsolnp, R(>= 2.10.0)\cr
 License: \tab GPL-2\cr
 }
 This package provides an implementation of several fitting procedures for 
@@ -37,28 +40,31 @@ distributions. Those targets can also multi-dimensional. The available methods
 are listed herehunder.
 
 \itemize{
-  \item The function \link[mipfp]{Ipfp} provides the Iterative Proportionnal 
-    Fitting Procedure. The variance-covariance matrix of the updated cells 
-    probabilities determined by Delta method (Little and Wu, 1991) can also 
-    be obtained using the function \link[mipfp]{IpfpCov}.
+  \item The function \link[mipfp]{Ipfp} provides the iterative proportionnal 
+    fitting Procedure. The variance-covariance matrix for the updated cells 
+    probabilities is determined by the Delta method (Little and Wu, 1991) can
+    alsobe obtained using the function \link[mipfp]{IpfpCov}.
   \item Maximum likelihood, minimum Chi-square and weighted least squares
     approaches are availables in the function
-    \link[mipfp]{ObtainModelEstimates}. Note that the function provides the 
+    \link[mipfp]{ObtainModelEstimates}. Note that this function provides the 
     updated table as well as the variance-covariance matrix of the estimated 
-    cells probabilities using either the Lang's (2004) or the Delta method 
+    cell probabilities using either the Lang's (2004) or the Delta method 
     (Little and Wu, 1991).
 }
 
 The package also includes an application of the IPFP to simulate and estimate 
 the parameters of multivariate Bernoulli distributions, respectively in the
 functions \link[mipfp]{RMultBinary} and \link[mipfp]{ObtainMultBinaryDist}.
-In addition the functions \link[mipfp]{Corr2Odds}, \link[mipfp]{Odds2Corr}, 
+In addition, the functions \link[mipfp]{Corr2Odds}, \link[mipfp]{Odds2Corr}, 
 \link[mipfp]{Corr2PairProbs}, \link[mipfp]{Odds2PairProbs} are in turn 
 responsible for converting correlation to odds ratio, odds ratio to correlation, 
 correlation to pairwise probability and odds ratio to pairwise probability.
 
-Finally, \link[mipfp]{Array2Vector} and \link[mipfp]{Vector2Array} are two 
-auxillary functions aiming at transforming an array to a vector and vice-versa. 
+Finally, auxillary functions are also provided. \link[mipfp]{Array2Vector} and 
+\link[mipfp]{Vector2Array} transforms an array to a vector and vice-versa.
+The function \link[mipfp]{GetLinInd} extracting the linearly independant columns 
+from a matrix (using QR decomposition) and returning a matrix of full rank is 
+also provided.
 }
 \author{
 Johan Barthelemy and Thomas Suesse with contributions from Mohammad Namazi-Rad.
@@ -82,6 +88,10 @@ Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
  Fienberg, S. E. (1970).
  An Iterative Procedure for Estimation in Contingency Tables.
  \emph{Annals of Mathematical Statistics} 41 (3): 907-917.
+
+ Golub, G. H., Van Loan C. F. (2012)
+ \emph{Matrix Computations. Third Edition.}
+ Johns Hopkins University Press.
 
  Lang, J.B. (2004) 
  Multinomial-Poisson homogeneous models for contingency tables. 

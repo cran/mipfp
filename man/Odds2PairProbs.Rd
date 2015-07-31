@@ -10,7 +10,7 @@ measure of association \eqn{O_{ij}}{O_ij} between every pair
 \eqn{P(X_i = 1, X_j = 1)}{P(X_i = 1, X_j = 1)}, where \eqn{O_{ij}}{O_ij} is
 defined as
 \deqn{
-O_ij = \frac{P(X_i = 1, X_j = 1) * P(X_i = 0, X_j = 0)}
+O_{ij} = \frac{P(X_i = 1, X_j = 1) * P(X_i = 0, X_j = 0)}
             {P(X_i = 1, X_j = 0) * P(X_i = 0, X_j = 1)}.
 }{
 O_ij = P(X_i = 1, X_j = 1) * P(X_i = 0, X_j = 0) / 

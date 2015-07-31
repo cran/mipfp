@@ -27,12 +27,12 @@ Ipfp(seed, target.list, target.data, print = FALSE, iter = 1000, tol = 1e-10,
   \item{target.list}{
     A list of dimensions of the marginal target constrains in
     \code{target.data}. Each component of the list is an array whose cells 
-    indicate which dimension the corresponding margin relates to
+    indicate which dimension the corresponding margin relates to.
 }    
   \item{target.data}{
-    A list containing the data of the target margins. Each
+    A list containing the data of the target marginal tables. Each
     component of the list is an array storing a margin.
-    The list order must follow the one defined in \code{target.list}.
+    The list order must follow the ordering defined in \code{target.list}.
     Note that the cells of the arrays must be non-negative.
 }
   \item{print}{
@@ -53,9 +53,9 @@ Ipfp(seed, target.list, target.data, print = FALSE, iter = 1000, tol = 1e-10,
     particular case the margins consistency is not checked.
 }
   \item{compute.cov}{
-    If set to TRUE, then the function also return the covariance matrices of 
-    the updated cells and cells proportion as well as the associated standard
-    errors. Default = FALSE.
+    If set to TRUE, then the function also return the (asymptotic) covariance 
+    matrices of the updated cells and cells proportion as well as the associated
+    standard errors. Default = FALSE.
 }
   \item{...}{
     Additional arguments that can be passed to the IpfpCov function if
@@ -67,12 +67,28 @@ Ipfp(seed, target.list, target.data, print = FALSE, iter = 1000, tol = 1e-10,
 A list containing the final updated array as well as other convergence
 informations.
   \item{x.hat}{
-    An array of the same dimension of \code{seed} whose margins match the ones
+    An array with the same dimension of \code{seed} whose margins match those
     specified in \code{target.list}.
 }
   \item{p.hat}{
-    An array of the same dimension of \code{x.hat} containing the updated
+    An array with the same dimension of \code{x.hat} containing the updated
     cell probabilities, i.e. \code{x.hat / sum(x.hat)}.
+}
+  \item{x.hat.cov}{
+    Asymptotic covariance matrix for \code{x.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{x.hat.se}{
+    Vector of standard errors for \code{x.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{p.hat.cov}{
+    Asymptotic covariance matrix for \code{p.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
+}
+  \item{p.hat.se}{
+    Vector of standard errors for \code{p.hat} using the Delta method (if 
+    \code{compute.cov = TRUE}).
 }
   \item{stp.crt}{
     The final value of the stopping criterion.
@@ -99,7 +115,7 @@ informations.
 
  Deming, W. E., Stephan, F. F. (1940).
  On a Least Squares Adjustment of a Sampled Frequency Table When the Expected
- sMarginal Totals are Known.
+ Marginal Totals are Known.
  \emph{Annals of Mathematical Statistics} 11 (4): 427-444.
  
  Fienberg, S. E. (1970).
@@ -133,6 +149,9 @@ is then normalised by considering probabilities instead of frequencies:
  
  The documentation of \link[mipfp:IpfpCov]{IpfpCov} provide details on the
  the covariance matrices determination.
+ 
+ \link[mipfp:ObtainModelEstimates]{ObtainModelEstimates} for alternatives to
+ the IPFP.
 }
 
 \examples{
