@@ -1,10 +1,10 @@
-49c8a413707919e7ddf2dd6ad90d6839 *DESCRIPTION
+145ff29497bf0feb8d8ae94ad2f5396d *DESCRIPTION
 7351dbc8fb690df4119be4a49dacb862 *NAMESPACE
 c5e5b57049d25b0489363fb0e29e92b3 *R/binary.R
 a776c1c61701ba7657cc3ebcdafa15b4 *R/ipfp_multi_dim.R
-e4f499b3c1840c9b5cc5a10595b354bd *R/models.R
+6053e1736c0228f2881b905cbbbd7eb8 *R/models.R
 fc278acb20d010775533f5254e6b5964 *R/utils.R
-927607a2dba390bf45fc19e9b643a9ea *data/Qaqish.RData
+f30954f2c5b8459ee1e3c54999e28358 *data/Qaqish.RData
 acb1dea0d8e36893c9898d63607d1ea4 *data/spnamur.RData
 beda51aeba57f4c3d4a9b4c6cde3c4c4 *man/Array2Vector.Rd
 7390881b223943d253be00f80d2f95b3 *man/Corr2Odds.Rd
@@ -20,5 +20,5 @@ d013dda403f700911177eb9d1273a81b *man/Odds2PairProbs.Rd
 669e5041a6c587f10806dee4dca50839 *man/Qaqish.Rd
 d97bb5017e59605fd2860bb4c9f38bf4 *man/RMultBinary.Rd
 2d46cba127cefb6d5c7e79d5d6ccbd24 *man/Vector2Array.Rd
-8a4b32e60995aab046dd6238b9c972ce *man/mipfp-package.Rd
+84158e28d0f93068fe3941ad8f7afdac *man/mipfp-package.Rd
 5b2e5a015d92bd20ce2befde4cbe616e *man/spnamur.Rd
