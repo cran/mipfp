@@ -1,9 +1,9 @@
-bbf477420106555223e6170f4267c720 *DESCRIPTION
+03b21ab9490ed3de821bcd5ebfd3369c *DESCRIPTION
 2fe6e9faa4e4798a29d3a51275f713d3 *NAMESPACE
 c5e5b57049d25b0489363fb0e29e92b3 *R/binary.R
 45d86ab1df531461e1ab6aa5a2492a64 *R/deprecated.R
-2508c8349042baee948aee8c0f17e4c1 *R/ipfp_multi_dim.R
-813a52d4f9a96656fd674953844d3426 *R/models.R
+41bdbe39287119eb9724083e2e8cc230 *R/ipfp_multi_dim.R
+099ed3e6549a37eceaa3754efde22b3d *R/models.R
 b498818b548261242bb7836cb557236d *R/s3_mipfp.R
 2093ef8e09a73c187f2c3cdd390bbd9f *R/utils.R
 f30954f2c5b8459ee1e3c54999e28358 *data/Qaqish.RData
@@ -16,9 +16,9 @@ f82758a4dc697332e83d04122096440f *man/CompareMaxDev.Rd
 25eedafef10dcbed2de582430a5b75a0 *man/Estimate.Rd
 b82a4551a60a6ba4800a306592f8d9ee *man/GetConfInt.Rd
 85b9c3b7c201c1ab9f0397f2eee95934 *man/GetLinInd.Rd
-bb1fa628d625995d1afa5fd408ca808f *man/Ipfp.Rd
+49f188ac05de13ed9392901c44162423 *man/Ipfp.Rd
 1198b5f03924af221c30f46fc209d920 *man/IpfpCov.Rd
-6e47eb5b9bf78dbc3ada47f4def90fe4 *man/ObtainModelEstimates.Rd
+81c84c596adea772e6b651d3db6f210c *man/ObtainModelEstimates.Rd
 0705daa54344b9212453af87f71a9436 *man/ObtainMultBinaryDist.Rd
 9e6469bb30b53187cbe489555666383b *man/Odds2Corr.Rd
 d013dda403f700911177eb9d1273a81b *man/Odds2PairProbs.Rd
