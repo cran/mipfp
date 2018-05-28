@@ -1,11 +1,11 @@
-ad2f23f65dca230c975b8334f3b5a12e *DESCRIPTION
+81951f419a3142601f0b02b4ba6ec942 *DESCRIPTION
 80eea3b9d5d05ffad7e83b9fd6def776 *NAMESPACE
 c5e5b57049d25b0489363fb0e29e92b3 *R/binary.R
 45d86ab1df531461e1ab6aa5a2492a64 *R/deprecated.R
 41bdbe39287119eb9724083e2e8cc230 *R/ipfp_multi_dim.R
 099ed3e6549a37eceaa3754efde22b3d *R/models.R
 4e5dca37ef9676a37e78adb15541b2cc *R/s3_mipfp.R
-f9b48f9c386b23a204ad117228e65435 *R/utils.R
+d2d4f2e2e530641d86ee69117682fb3a *R/utils.R
 f30954f2c5b8459ee1e3c54999e28358 *data/Qaqish.RData
 acb1dea0d8e36893c9898d63607d1ea4 *data/spnamur.RData
 41dcf7474b2d2a2a8a6b2df1374d7823 *man/Array2Vector.Rd
