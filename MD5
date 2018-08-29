@@ -1,4 +1,4 @@
-81951f419a3142601f0b02b4ba6ec942 *DESCRIPTION
+b31476c82f63a24c626fa156526f08be *DESCRIPTION
 80eea3b9d5d05ffad7e83b9fd6def776 *NAMESPACE
 c5e5b57049d25b0489363fb0e29e92b3 *R/binary.R
 45d86ab1df531461e1ab6aa5a2492a64 *R/deprecated.R
@@ -8,6 +8,7 @@ c5e5b57049d25b0489363fb0e29e92b3 *R/binary.R
 d2d4f2e2e530641d86ee69117682fb3a *R/utils.R
 f30954f2c5b8459ee1e3c54999e28358 *data/Qaqish.RData
 acb1dea0d8e36893c9898d63607d1ea4 *data/spnamur.RData
+d3709e37a572d341ab3b3d2cf2ccc623 *inst/CITATION
 41dcf7474b2d2a2a8a6b2df1374d7823 *man/Array2Vector.Rd
 f82758a4dc697332e83d04122096440f *man/CompareMaxDev.Rd
 13680e13c019b951bc5b693e7de82388 *man/ComputeA.Rd
@@ -31,7 +32,7 @@ e00ed6e2ad7135820152566ee5055651 *man/error.margins.Rd
 27e7863f525a6cb7a75f7b1eed91dcd9 *man/expand.Rd
 cd5462869e8ca938d604090bb8830a72 *man/flat.Rd
 a099460a7d19f46ed8db03f79dfbbbc9 *man/gof.estimates.Rd
-5a82b3c9d3119f1d31abb8db10b4d877 *man/mipfp-package.Rd
+648874f36d97f61d997eb28385576bf9 *man/mipfp-package.Rd
 fc6e5ae0fd78f751658410d21ee63498 *man/spnamur.Rd
 0ab960791ca7c9511faa316c5a109322 *man/summary.mipfp.Rd
 04d3e26c7af4c0c29b80e773d0774cd9 *man/vcov.mipfp.Rd

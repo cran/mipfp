@@ -29,8 +29,8 @@ hence returning a matrix of full rank is provided.
 \tabular{ll}{
 Package: \tab mipfp\cr
 Type: \tab Package\cr
-Version: \tab 3.1\cr
-Date: \tab 2016-11-29\cr
+Version: \tab 3.2.1\cr
+Date: \tab 2018-08-29\cr
 Depends: \tab cmm, numDeriv, Rsolnp, R(>= 2.10.0)\cr
 License: \tab GPL-2\cr
 }
@@ -88,6 +88,11 @@ Maintainer: Johan Barthelemy \email{johan@uow.edu.au}.
  Bacharach, M. (1965).
  Estimating Nonnegative Matrices from Marginal Data.
  \emph{International Economic Review} (Blackwell Publishing) 6 (3): 294-310.
+ 
+ Barthelemy, J., Suesse, T. (2018).
+ mipfp: An R Package for Multidimensional Array Fitting and Simulating Multivariate Bernoulli Distributions.
+ \emph{Journal of Statistical Software, Code Snippets} 86 (2): 1-20, doi: 10.18637/jss.v086.c02.
+ 
  
  Bishop, Y. M. M., Fienberg, S. E., Holland, P. W. (1975).
  \emph{Discrete Multivariate Analysis: Theory and Practice.}
